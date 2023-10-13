@@ -24,5 +24,9 @@ class LASSEVANIA_API ICombatInterface
 public:
 
 	virtual int32 GetAvatarLevel();
+	
+
+
+	virtual void Die() = 0;
 
 };

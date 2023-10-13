@@ -14,7 +14,6 @@ public:
 
 	static const FLassevaniaGameplayTags& Get() { return GameplayTags; }
 
-	static void SetKakka() { GameplayTags.Testi = 50123030; }
 
 	static void InitializeNativeGameplayTags();
 	static void SetLassevaniaGameplayTagReferences();
@@ -25,6 +24,7 @@ public:
 	FGameplayTag Attributes_Primary_Intelligence;
 	FGameplayTag Attributes_Primary_Dexterity;
 	FGameplayTag Attributes_Primary_Spirit;
+	FGameplayTag Attributes_Primary_Vigor;
 
 	FGameplayTag Attributes_Secondary_Armor;
 	FGameplayTag Attributes_Secondary_CriticalHitChance;
@@ -35,6 +35,12 @@ public:
 	FGameplayTag Attributes_Secondary_MaxHealth;
 	FGameplayTag Attributes_Secondary_MaxStamina;
 	FGameplayTag Attributes_Secondary_MaxMana;
+	FGameplayTag Attributes_Secondary_BlockChance;
+
+	FGameplayTag Effects_HitReact;
+
+
+	FGameplayTag Damage;
 
 protected:
 

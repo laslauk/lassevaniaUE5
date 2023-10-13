@@ -6,6 +6,7 @@
 #include "GameFramework/GameMode.h"
 #include "GameModeLassevania.generated.h"
 
+class UCharacterClassInfo;
 /**
  * 
  */
@@ -15,6 +16,10 @@ class LASSEVANIA_API AGameModeLassevania : public AGameMode
 	GENERATED_BODY()
 
 public:
+
+	UPROPERTY(EditDefaultsOnly)
+		TObjectPtr<UCharacterClassInfo> CharacterClassInfo;
+
 
 	virtual void InitGame(const FString& MapName,
 		const FString& Options,

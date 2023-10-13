@@ -15,6 +15,7 @@
 #include "Inventory/InventoryFragment_EquippableItem.h"
 #include "LassevaniaCommonTypes.h"
 #include "Input/LVInputComponent.h"
+#include "Equipment/EquipmentDefinition.h"
 #include "Inventory/InventoryItemDefinition.h"
 #include "GameplayTagsManager.h"
 #include "Equipment/EquipmentInstance.h"
@@ -29,8 +30,26 @@
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputComponent.h"
 #include "LassevaniaGameplayTags.h"
+#include "UI/Widget/DamageTextComponent.h"
 #include "CharacterZDBase.h"
 
+
+void APlayerControllerBase::ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter)
+{
+	/* is valid checks PendingKill() aswell*/
+	if (IsValid(TargetCharacter) && DamageTextComponentClass)
+	{
+		UDamageTextComponent* DamageText = NewObject<UDamageTextComponent>(TargetCharacter, DamageTextComponentClass);
+		DamageText->RegisterComponent();
+
+		DamageText->AttachToComponent(TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+
+		DamageText->AddRelativeLocation(FVector(0.f, 0.f, 170.f));
+		DamageText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+		DamageText->SetDamageText(DamageAmount);
+	}
+
+}
 
 void APlayerControllerBase::OnPossess(APawn* aPawn)
 {

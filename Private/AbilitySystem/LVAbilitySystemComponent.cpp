@@ -29,7 +29,7 @@ void ULVAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGameP
 
 	for (const FGameplayAbilitySpecHandle& SpecHandle : InputPressedSpecHandles)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ULVAbilitySystemComponent::ProcessAbilityInput PROCESS INPUTY PRESSED HANDLES !"));
+	//	UE_LOG(LogTemp, Warning, TEXT("ULVAbilitySystemComponent::ProcessAbilityInput PROCESS INPUTY PRESSED HANDLES !"));
 	
 		if (FGameplayAbilitySpec* AbilitySpec = FindAbilitySpecFromHandle(SpecHandle))
 		{
@@ -66,7 +66,7 @@ void ULVAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGameP
 	{
 		
 		bool Success = TryActivateAbility(AbilitySpecHandle);
-		UE_LOG(LogTemp, Warning, TEXT("---> TryActivateAbility Input %s 2"), *FindAbilitySpecFromHandle(AbilitySpecHandle)->GetDebugString());
+	//	UE_LOG(LogTemp, Warning, TEXT("---> TryActivateAbility Input %s 2"), *FindAbilitySpecFromHandle(AbilitySpecHandle)->GetDebugString());
 
 		if (!Success)
 		{
@@ -86,10 +86,10 @@ void ULVAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGameP
 			if (AbilitySpec->Ability)
 			{
 				AbilitySpec->InputPressed = false;
-				UE_LOG(LogTemp, Warning, TEXT("---> AbilitySpecInputReleased Input %s 1"), *AbilitySpec->Ability->GetName());
+			//	UE_LOG(LogTemp, Warning, TEXT("---> AbilitySpecInputReleased Input %s 1"), *AbilitySpec->Ability->GetName());
 				if (AbilitySpec->IsActive())
 				{
-					UE_LOG(LogTemp, Warning, TEXT("---> AbilitySpecInputReleased Input %s 2"), *AbilitySpec->Ability->GetName());
+			//		UE_LOG(LogTemp, Warning, TEXT("---> AbilitySpecInputReleased Input %s 2"), *AbilitySpec->Ability->GetName());
 					// Ability is active so pass along the input event.
 					AbilitySpecInputReleased(*AbilitySpec);
 				}
@@ -110,15 +110,15 @@ void ULVAbilitySystemComponent::ClearInputPressedQue()
 
 void ULVAbilitySystemComponent::OnAbilityEnded(UGameplayAbility* Ability)
 {
-	UE_LOG(LogTemp, Warning, TEXT("---> OnAbilityEnded 1"));
+	//UE_LOG(LogTemp, Warning, TEXT("---> OnAbilityEnded 1"));
 	if (InputPressedSpecHandlesQue.Num() > 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("---> OnAbilityEnded 2"));
+	//	UE_LOG(LogTemp, Warning, TEXT("---> OnAbilityEnded 2"));
 
 		for (auto abilitHandle : InputPressedSpecHandlesQue)
 		{
 
-			UE_LOG(LogTemp, Warning, TEXT("---> OnAbilityEnded 3"));
+			//UE_LOG(LogTemp, Warning, TEXT("---> OnAbilityEnded 3"));
 			if (abilitHandle.IsValid())
 			{
 			
@@ -127,12 +127,12 @@ void ULVAbilitySystemComponent::OnAbilityEnded(UGameplayAbility* Ability)
 
 				if (spec)
 				{
-					if(spec->IsActive())
-					UE_LOG(LogTemp, Warning, TEXT("---> FOUND SEPC and its active  4.1"));
+					//if(spec->IsActive())
+				//	UE_LOG(LogTemp, Warning, TEXT("---> FOUND SEPC and its active  4.1"));
 
 				}
 
-				UE_LOG(LogTemp, Warning, TEXT("---> OnAbilityEnded 4"));
+			//	UE_LOG(LogTemp, Warning, TEXT("---> OnAbilityEnded 4"));
 				InputPressedSpecHandles.AddUnique(abilitHandle);
 				
 			
@@ -175,7 +175,7 @@ void ULVAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& Input
 	//	UE_LOG(LogTemp, Warning, TEXT("AbilityInputTagPressed 2"));
 		for (const FGameplayAbilitySpec& AbilitySpec : ActivatableAbilities.Items)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("AbilityInputTagPressed 3"));
+		//	UE_LOG(LogTemp, Warning, TEXT("AbilityInputTagPressed 3"));
 
 			if (AbilitySpec.Ability)
 			{
@@ -195,13 +195,13 @@ void ULVAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& Input
 
 				//UE_LOG(LogTemp, Warning, TEXT("AbilityInputTagPressed adding uniguqes -->"));
 
-				UE_LOG(LogTemp, Warning, TEXT("AbilityInputTagPressed 3 - before unique add"));
+				//UE_LOG(LogTemp, Warning, TEXT("AbilityInputTagPressed 3 - before unique add"));
 				/* Siell‰ on jo t‰m‰ ability, pistet‰‰n cueen?*/
 
 				if (AbilitySpec.IsActive())
 				{
 
-					UE_LOG(LogTemp, Warning, TEXT("AbilityInputTagPressed 4 - added to cue"));
+				//	UE_LOG(LogTemp, Warning, TEXT("AbilityInputTagPressed 4 - added to cue"));
 					InputPressedSpecHandlesQue.AddUnique(AbilitySpec.Handle);
 
 				}

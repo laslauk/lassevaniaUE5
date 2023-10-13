@@ -6,7 +6,10 @@
 #include "Components/WidgetComponent.h"
 #include "UI/UserWidgetBase.h"
 #include "AttributeSetBase.h"
+#include "AbilitySystem/LassevaniaAbilitySystemLibrary.h"
 #include "AbilitySystem/LVAbilitySystemComponent.h"
+#include "LassevaniaGameplayTags.h"
+
 
 
 AEnemyCharacterBase::AEnemyCharacterBase()
@@ -17,11 +20,16 @@ AEnemyCharacterBase::AEnemyCharacterBase()
 	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
 	HealthBar->SetupAttachment(GetRootComponent());
 
+
+
 }
 
 void AEnemyCharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
+
+	
+
 	ApplyStartupEffects();
 		
 }
@@ -36,9 +44,34 @@ UAttributeSetBase* AEnemyCharacterBase::GetAttributeSetComponent()
 	return AttributeSetBaseComp;
 }
 
+void AEnemyCharacterBase::Die()
+{
+	Super::Die();
+	Destroy();
+}
+
+void AEnemyCharacterBase::InitializeDefaultAttributes()
+{
+	if (!AbilitySystemComponent)
+	{
+		UE_LOG(LogTemp, Warning, TEXT(" ------ AbilitySystemComponent : null ASC"));
+		return;
+	}
+	ULassevaniaAbilitySystemLibrary::InitializeDefaultAttributes
+	(
+		this, /*world contextr obj*/
+		CharacterClass, /*class enum type of this char */
+		Level, /*character level*/
+		AbilitySystemComponent /*ASC ptr of this char*/
+	);
+
+}
+
 int32 AEnemyCharacterBase::GetAvatarLevel() {
 	return Level;
 }
+
+
 
 void AEnemyCharacterBase::BeginPlay()
 {
@@ -71,15 +104,75 @@ void AEnemyCharacterBase::BeginPlay()
 
 		OnHealthChanged.Broadcast(AS->GetHealth());
 		OnMaxHealthChanged.Broadcast(AS->GetMaxHealth());
+
+
+
+
+		for (const TSubclassOf<UGameplayAbility> AbilityClass : CommonAbilities)
+		{
+			FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+		
+			if (const UGameplayAbilityBase* GameplayAbiltiyBase = Cast<UGameplayAbilityBase>(AbilitySpec.Ability))
+			{
+				FGameplayAbilitySpecHandle AbilitySpecHandle = GetAbilitySystemComponent()->GiveAbility(AbilitySpec);
+
+
+				if (AbilitySpecHandle.IsValid())
+				{
+
+					UE_LOG(LogTemp, Warning, TEXT("Granted ability "));
+
+				}
+			}
+		}
+
+
 	}
 
+	/* Listen for tag add / removal */
+	BindToGameplayTags();
+	InitializeDefaultAttributes();
 
+
+}
+
+void AEnemyCharacterBase::BindToGameplayTags()
+{
+	if (AbilitySystemComponent)
+	{
+
+		AbilitySystemComponent->RegisterGameplayTagEvent(FLassevaniaGameplayTags::Get().Effects_HitReact,
+			EGameplayTagEventType::AnyCountChange).AddUObject(this, &AEnemyCharacterBase::HitReactTagChanged);
+
+	}
+
+}	
+
+void AEnemyCharacterBase::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewTagCount)
+{
+	UE_LOG(LogTemp, Warning, TEXT("ASDDASDASDADSASDADS"));
+	 bHitReacting = NewTagCount > 0;
+	
+	 /*
+	 if (IsValid(HitReactEffectClass))
+	 {
+		 FGameplayEffectContextHandle ContextHandle;
+		 FGameplayEffectSpecHandle GE_Handle = AbilitySystemComponent->MakeOutgoingSpec(HitReactEffectClass, 1, ContextHandle);
+		 AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*GE_Handle.Data.Get());
+
+	 }
+	*/
+
+
+	K2_OnHitReact();
 
 }
 
 void AEnemyCharacterBase::InitAbilityActorInfo()
 {
-	InitializeDefaultAttributes();
+	
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+
 
 }
 

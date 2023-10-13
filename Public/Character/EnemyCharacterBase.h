@@ -6,6 +6,8 @@
 
 #include "CharacterZDBase.h"
 #include "../UI/WidgetController/OverlayWidgetController.h"
+#include "../AbilitySystem/Data/CharacterClassInfo.h"
+
 #include "EnemyCharacterBase.generated.h"
 
 
@@ -13,6 +15,9 @@
 
 class UWidgetComponent;
 class UAttributeSetBase;
+class UGameplayAbility;
+
+
 /**
  * 
  */
@@ -41,10 +46,15 @@ public:
 
 	 virtual UAttributeSetBase* GetAttributeSetComponent() override;
 
+	 virtual void Die() override;
+
+	 virtual void InitializeDefaultAttributes() override;
 	 
 
 	 UFUNCTION(BlueprintCallable)
 		  void SetAvatarLevel(int32 NewLevel) { Level = NewLevel; }
+
+	 void BindToGameplayTags();
 
 	 virtual int32 GetAvatarLevel() override;
 
@@ -54,6 +64,22 @@ public:
 	 UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangedSignature OnMaxHealthChanged;
 
+	 UPROPERTY(BlueprintReadonly, Category = "Combat")
+		  bool bHitReacting;
+	
+	 void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewTagCount);
+
+	 UFUNCTION(BlueprintImplementableEvent, meta =
+		 (DisplayName = "OnHitReact" ))
+	 void K2_OnHitReact();
+
+	 /* nyt t‰m‰ applyttana kun tulee Damage tag, voisi pist‰‰ suoraan damage effektist‰ mutta more control nyt*/
+	 UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	 TSubclassOf<UGameplayEffect> HitReactEffectClass;
+
+
+	 UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	 TArray<TSubclassOf<UGameplayAbility>> CommonAbilities;
 
 private:
 
@@ -69,7 +95,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "character class defaults")
 		int32 Level = 1;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "character class defaults")
+	ECharacterClass CharacterClass = ECharacterClass::Warrior;
+
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UWidgetComponent> HealthBar;
 
 	/* all attris*/

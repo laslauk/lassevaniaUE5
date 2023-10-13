@@ -10,7 +10,7 @@ void FLassevaniaGameplayTags::InitializeNativeGameplayTags()
 {
 
 	 /* Primary */
-	GameplayTags.Testi = 666;
+
 
 	GameplayTags.Attributes_Primary_Strength = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Attributes.Primary.Strength"),
@@ -32,6 +32,12 @@ void FLassevaniaGameplayTags::InitializeNativeGameplayTags()
 		FName("Attributes.Primary.Spirit"),
 		FString("Increases spiritual stuff.")
 	);
+
+	GameplayTags.Attributes_Primary_Spirit = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.Primary.Vigor"),
+		FString("Increases health")
+	);
+
 
 
 	/* Secondary */
@@ -71,6 +77,19 @@ void FLassevaniaGameplayTags::InitializeNativeGameplayTags()
 		FString("Maximum stamina")
 	);
 
+	GameplayTags.Attributes_Secondary_BlockChance = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Attributes.Secondary.BlockChance"),
+		FString("Maximum stamina")
+	);
+
+	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Damage")
+	);
+
+	GameplayTags.Effects_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Damage.Effect.HitReact")
+	);
+
 }
 
 void FLassevaniaGameplayTags::SetLassevaniaGameplayTagReferences()
@@ -95,6 +114,11 @@ void FLassevaniaGameplayTags::SetLassevaniaGameplayTagReferences()
 	GameplayTags.Attributes_Primary_Spirit = UGameplayTagsManager::Get().RequestGameplayTag(
 		FName("Attributes.Primary.Spirit")
 	);
+
+	GameplayTags.Attributes_Primary_Vigor = UGameplayTagsManager::Get().RequestGameplayTag(
+		FName("Attributes.Primary.Vigor")
+	);
+
 
 
 	/* Secondary */
@@ -133,6 +157,19 @@ void FLassevaniaGameplayTags::SetLassevaniaGameplayTagReferences()
 		FName("Attributes.Secondary.MaxMana")
 	);
 
+	GameplayTags.Attributes_Secondary_BlockChance = UGameplayTagsManager::Get().RequestGameplayTag(
+		FName("Attributes.Secondary.BlockChance")
+	);
+
+	
+
+	GameplayTags.Damage = UGameplayTagsManager::Get().RequestGameplayTag(
+		FName("Damage")
+	);
+
+	GameplayTags.Effects_HitReact = UGameplayTagsManager::Get().RequestGameplayTag(
+		FName("Damage.Effect.HitReact")
+	);
 
 
 }

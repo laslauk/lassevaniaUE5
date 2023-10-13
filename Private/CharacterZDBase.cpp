@@ -155,6 +155,10 @@ void ACharacterZDBase::ApplyStartupEffects()
 	
 }
 
+void ACharacterZDBase::Die()
+{
+}
+
 void ACharacterZDBase::InitializeDefaultAttributes()
 {
 

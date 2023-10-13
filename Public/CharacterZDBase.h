@@ -71,9 +71,12 @@ public:
 
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> Effect, float level);
 
+
+
+	virtual void Die() override;
 	/* Combat interface end*/
 
-	void InitializeDefaultAttributes();
+	virtual void InitializeDefaultAttributes();
 
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes") //metas not replicated

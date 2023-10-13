@@ -16,6 +16,7 @@ class APlayerCharacterBase;
 class ULVAbilitySystemComponent;
 class MapMenuWidgetClass;
 class UMapMenuWidget;
+class UUserWidgetBase;
 class ALassevaniaHUD;
 /* INPUT CUE https://www.youtube.com/watch?v=8yLq7jlVCAY&t=6090s*/
 /* https://gascompanion.github.io/ability-queue-system/ */
@@ -50,6 +51,15 @@ class LASSEVANIA_API APlayerControllerBase : public APlayerController
 	GENERATED_BODY()
 
 public:
+
+
+
+	UFUNCTION()
+	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter);
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<class UDamageTextComponent> DamageTextComponentClass;
+
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<ALassevaniaHUD> HUDClass;

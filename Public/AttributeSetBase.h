@@ -26,6 +26,46 @@ using TStaticFuncPtr = typename TBaseStaticDelegateInstance<T, FDefaultDelegateU
 
 class UAbilitySystemComponent;
 
+
+USTRUCT(BlueprintType)
+struct FEffectProperties
+{
+	GENERATED_BODY()
+
+public:
+	FEffectProperties(){}
+
+	FGameplayEffectContextHandle EffectContextHandle;
+
+	/* Source */
+	UPROPERTY()
+	UAbilitySystemComponent* SourceASC = nullptr;
+
+	UPROPERTY()
+	AActor* SourceAvatarActor = nullptr;
+
+	UPROPERTY()
+	AController* SourceController = nullptr;
+
+	UPROPERTY()
+	ACharacter* SourceCharacter = nullptr;
+
+	/* Target */
+	UPROPERTY()
+	UAbilitySystemComponent* TargetASC = nullptr;
+
+	UPROPERTY()
+	AActor* TargetAvatarActor = nullptr;
+
+	UPROPERTY()
+	AController* TargetController = nullptr;
+
+	UPROPERTY()
+	ACharacter* TargetCharacter = nullptr;
+
+};
+
+
 UCLASS()
 class LASSEVANIA_API UAttributeSetBase : public UAttributeSet
 {
@@ -43,6 +83,7 @@ public:
 	TMap<FGameplayTag, TStaticFuncPtr<FGameplayAttribute()>> TagsToAttributesMap;
 
 
+	void SetEffectProperties(const struct FGameplayEffectModCallbackData& Data, FEffectProperties& EffectProperties);
 
 	/* Initial Design:
 
@@ -85,6 +126,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AttributeSetBase | Primary Attributes")
 	FGameplayAttributeData Intelligence;
 	ATTRIBUTE_ACCESSORS(UAttributeSetBase, Intelligence)
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AttributeSetBase | Primary Attributes")
+	FGameplayAttributeData Vigor;
+	ATTRIBUTE_ACCESSORS(UAttributeSetBase, Vigor)
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AttributeSetBase | Primary Attributes")
@@ -146,6 +192,10 @@ ATTRIBUTE_ACCESSORS(UAttributeSetBase, MovementSpeed)
 	ATTRIBUTE_ACCESSORS(UAttributeSetBase, MagicResistance)
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AttributeSetBase | Secondary Attributes")
+	FGameplayAttributeData BlockChance;
+	ATTRIBUTE_ACCESSORS(UAttributeSetBase, BlockChance)
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AttributeSetBase | Secondary Attributes")
 	FGameplayAttributeData DodgeChance;
 	ATTRIBUTE_ACCESSORS(UAttributeSetBase, DodgeChance)
 
@@ -195,5 +245,8 @@ ATTRIBUTE_ACCESSORS(UAttributeSetBase, MovementSpeed)
 protected:
 
 
+	private:
+
+		void ShowFloatingText(const FEffectProperties& Props, float Damage);
 
 };

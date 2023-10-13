@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Templates/SubclassOf.h"
 #include "Inventory/InventoryItemDefinition.h"
+
 #include "InventoryFragment_EquippableItem.generated.h"
 
 class UEquipmentDefinition;

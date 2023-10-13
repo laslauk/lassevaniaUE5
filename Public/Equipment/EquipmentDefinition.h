@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Containers/Array.h"
 #include "Math/Transform.h"
-#include "Templates/SubclassOf.h"
+
 #include "UObject/NameTypes.h"
 #include "UObject/Object.h"
 #include "UObject/ObjectPtr.h"

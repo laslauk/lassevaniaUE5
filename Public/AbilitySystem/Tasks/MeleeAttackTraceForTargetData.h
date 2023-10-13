@@ -31,11 +31,11 @@ public:
 			DefaultToSelf = "OwningAbility",
 			BlueprintInternalUseOnly = "true")
 	)
-		static UMeleeAttackTraceForTargetData* CreateMeleeAttackTraceForTargetData(UGameplayAbility* OwningAbility, FGameplayTag StartTag, FGameplayTag EndTag);
+		static UMeleeAttackTraceForTargetData* CreateMeleeAttackTraceForTargetData(UGameplayAbility* OwningAbility, FGameplayTag StartTag, FGameplayTag EndTag, bool bDrawDebug);
 
 	void GameplayEventCallback(const FGameplayEventData* Payload);
 
-
+	bool bDrawDebug;
 	/** Tick function for this task, if bTickingTask == true */
 	virtual void TickTask(float DeltaTime) override;
 

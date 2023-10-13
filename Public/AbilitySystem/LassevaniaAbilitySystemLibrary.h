@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include  "Data/CharacterClassInfo.h"
 #include "LassevaniaAbilitySystemLibrary.generated.h"
 
+class  UAbilitySystemComponent;
 class UOverlayWidgetController;
 /**
  * 
@@ -23,4 +25,12 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "LassevaniaAbilitySystemLibrary | WidgetController")
 		static UAttributeMenuWidgetController* GetAttributeMenuWidgetController(const UObject* WorldContextObject);
+
+
+	UFUNCTION(BlueprintCallable, Category = "LassevaniaAbilitySystemLibrary | CharacterClassDefaults")
+	static void InitializeDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC);
+	
+
+	static UCharacterClassInfo* GetCharacterClassInfo(const UObject* WorldContextObject);
+
 };

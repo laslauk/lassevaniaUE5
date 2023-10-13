@@ -12,13 +12,14 @@ UMeleeAttackTraceForTargetData::UMeleeAttackTraceForTargetData(const FObjectInit
 	bTickingTask = true;
 }
 
-UMeleeAttackTraceForTargetData* UMeleeAttackTraceForTargetData::CreateMeleeAttackTraceForTargetData(UGameplayAbility* OwningAbility, FGameplayTag StartEventTag, FGameplayTag EndEventTag)
+UMeleeAttackTraceForTargetData* UMeleeAttackTraceForTargetData::CreateMeleeAttackTraceForTargetData(UGameplayAbility* OwningAbility, FGameplayTag StartEventTag, FGameplayTag EndEventTag, bool bDrawDebug)
 {
 	
 
 	UMeleeAttackTraceForTargetData* MyObj = NewAbilityTask< UMeleeAttackTraceForTargetData >(OwningAbility);
 	MyObj->StartTag = StartEventTag;
 	MyObj->EndTag = EndEventTag;
+	MyObj->bDrawDebug = bDrawDebug;
 	return MyObj;
 
 
@@ -53,7 +54,7 @@ void UMeleeAttackTraceForTargetData::TickTask(float DeltaTime)
 			//	MyHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(Tag).
 				//	AddUObject(this, &UAbilityTask_WaitGameplayEvent::GameplayEventCallback);
 
-			UE_LOG(LogTemp, Warning, TEXT("Actor %s"), *AvatarActor->GetName());
+	
 
 			FCollisionQueryParams TraceParams(
 				SCENE_QUERY_STAT(WeaponTrace),
@@ -61,12 +62,14 @@ void UMeleeAttackTraceForTargetData::TickTask(float DeltaTime)
 				/*IgnoreActor=*/ AvatarActor);
 			TraceParams.bReturnPhysicalMaterial = true;
 
+			FVector BoxExtend({ 90.f,80.f,70.f });
 
 			TArray<FHitResult> HitResults;
-			FVector Start = AvatarActor->GetActorLocation();
+			FVector Start = AvatarActor->GetActorLocation() + 
+				(AvatarActor->GetActorForwardVector() * FVector(100.f,0.f,0.f));
 			FVector End = Start;
 			ECollisionChannel TraceChannel = Lassevania_TraceChannel_HitBoxTrace;
-			FCollisionShape Box = FCollisionShape::MakeBox(FVector({ 175.f,75.f,75.f }));
+			FCollisionShape Box = FCollisionShape::MakeBox(BoxExtend);
 			FCollisionQueryParams QueryParams;
 
 
@@ -80,33 +83,27 @@ void UMeleeAttackTraceForTargetData::TickTask(float DeltaTime)
 				TraceParams
 			);
 
-			DrawDebugBox(GetWorld(), Start, { 175.f,75.f,75.f }, FColor::Cyan, false, 5);
+			if (bDrawDebug)
+			{
+				DrawDebugBox(GetWorld(), Start, BoxExtend, FColor::Cyan, false, 5);
+			}
 
 		
 			NewHitActors.Empty();
 
-
 			for (auto hit : HitResults)
 			{
-			
-
 				if (!AllHitActors.Contains(hit.GetActor()))
 				{
-
 					NewHitActors.AddUnique(hit.GetActor());
-					UE_LOG(LogTemp, Warning, TEXT("AllHitActors does not contains %s"), *hit.GetActor()->GetName());
 				}
 
 				AllHitActors.AddUnique(hit.GetActor());
 
 			}
-			UE_LOG(LogTemp, Warning, TEXT("New HIT ACTOR COUNT %d"), NewHitActors.Num());
-			UE_LOG(LogTemp, Warning, TEXT("New HIT ACTOR COUNT %d"), AllHitActors.Num());
 
 			AttackEnded.Broadcast(NewHitActors);
-
 		}
-
 		
 	}
 
