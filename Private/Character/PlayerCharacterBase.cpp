@@ -6,6 +6,7 @@
 #include "Inventory/InventoryComponent.h"
 #include "Inventory/InventoryManagerComponent.h"
 #include "Equipment/EquipmentManagerComponent.h"
+#include "LassevaniaGameplayTags.h"
 #include "PlayerStateBase.h"
 #include "AbilitySystemComponent.h"
 #include "Interfaces/InteractInterface.h"
@@ -49,7 +50,10 @@ void APlayerCharacterBase::ApplyStartupEffects()
 APlayerStateBase* APlayerCharacterBase::GetPlayerState()
 {
 	return PlayerState;
+
 }
+
+
 
 void APlayerCharacterBase::SetPlayerState(APlayerStateBase* PlayerStateIn)
 {
@@ -76,6 +80,33 @@ APlayerControllerBase* APlayerCharacterBase::GetPlayerController()
 }
 
 
+
+/* should be called from controller onpossess*/
+void APlayerCharacterBase::SetDamageListenerTagCallback()
+{
+
+	if (UAbilitySystemComponent* ASC = GetAbilitySystemComponent())
+	{
+
+		ASC->RegisterGameplayTagEvent(FLassevaniaGameplayTags::Get().Damage,
+			EGameplayTagEventType::AnyCountChange).AddUObject(this, &APlayerCharacterBase::OnDamaged);
+
+	}
+
+}
+
+
+void APlayerCharacterBase::OnDamaged(const FGameplayTag CallbackTag, int32 NewTagCount)
+{
+
+	if (NewTagCount > 0)
+	{
+
+		K2_OnDamaged();
+	}
+	/* blueprint call*/
+
+}
 
 void APlayerCharacterBase::SetPlayerController(APlayerControllerBase* PlayerControllerIn)
 {
@@ -110,7 +141,8 @@ void APlayerCharacterBase::TryInteract()
 	FCollisionShape Shape = FCollisionShape::MakeSphere(125.f);
 
 	GetWorld()->SweepSingleByChannel(HitResult, StartTrace, EndTrace, FQuat::Identity, TraceChannel, Shape, TraceParams);
-	DrawDebugSphere(GetWorld(), StartTrace, 125.f, 8, FColor::Red, false, 2.f);
+
+	//DrawDebugSphere(GetWorld(), StartTrace, 125.f, 8, FColor::Red, false, 2.f);
 
 
 	IInteractInterface* Interface = Cast<IInteractInterface>(HitResult.GetActor());

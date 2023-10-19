@@ -17,6 +17,9 @@ class UWidgetComponent;
 class UAttributeSetBase;
 class UGameplayAbility;
 
+class UBehaviorTree;
+class ALassevaniaAIController;
+
 
 /**
  * 
@@ -30,6 +33,9 @@ class LASSEVANIA_API AEnemyCharacterBase : public ACharacterZDBase
 public:
 
 	AEnemyCharacterBase();
+
+	/* ABILITIES GIVEN WITH LASSEVANI_ABILITYSET data asset set to the character*/
+	virtual void GiveAbilities() override;
 
 	virtual void PossessedBy(AController* NewController) override;
 
@@ -46,7 +52,14 @@ public:
 
 	 virtual UAttributeSetBase* GetAttributeSetComponent() override;
 
+
+	 UFUNCTION(BlueprintImplementableEvent, meta =
+		 (DisplayName = "OnDeath"))
+		 void K2_OnDeath();
+
 	 virtual void Die() override;
+
+
 
 	 virtual void InitializeDefaultAttributes() override;
 	 
@@ -65,13 +78,13 @@ public:
 	FOnAttributeChangedSignature OnMaxHealthChanged;
 
 	 UPROPERTY(BlueprintReadonly, Category = "Combat")
-		  bool bHitReacting;
+		  bool bHitStunned;
 	
-	 void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewTagCount);
+	 void HitStunTagChanged(const FGameplayTag CallbackTag, int32 NewTagCount);
 
 	 UFUNCTION(BlueprintImplementableEvent, meta =
 		 (DisplayName = "OnHitReact" ))
-	 void K2_OnHitReact();
+	 void K2_OnHitStunned();
 
 	 /* nyt t‰m‰ applyttana kun tulee Damage tag, voisi pist‰‰ suoraan damage effektist‰ mutta more control nyt*/
 	 UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
@@ -79,13 +92,22 @@ public:
 
 
 	 UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	 TArray<TSubclassOf<UGameplayAbility>> CommonAbilities;
+		 TObjectPtr<ULassevaniaAbilitySet> EnemyCharacterAbilitySet;
+
+	 UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "AI")
+	TObjectPtr<UBehaviorTree> BehaviorTree;
+
+
+
 
 private:
 
 
 	UPROPERTY(VisibleAnywhere, Category = "CharacterBase")
 		UAttributeSetBase* AttributeSetBaseComp;
+
+	void SetupAI(AController* NewController);
+	void SetupMovementFor2DCharacter();
 
 protected:
 
@@ -105,6 +127,10 @@ protected:
 
 	/* all attris*/
 	
+
+
+	UPROPERTY()
+	TObjectPtr<ALassevaniaAIController> LassevaniaAIController;
 
 	
 };

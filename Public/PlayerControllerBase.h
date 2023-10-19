@@ -55,7 +55,7 @@ public:
 
 
 	UFUNCTION()
-	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter);
+	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter, bool bBlockingHit, bool bCriticalHit);
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<class UDamageTextComponent> DamageTextComponentClass;

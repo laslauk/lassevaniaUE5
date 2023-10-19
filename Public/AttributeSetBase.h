@@ -224,11 +224,40 @@ ATTRIBUTE_ACCESSORS(UAttributeSetBase, MovementSpeed)
 	FGameplayAttributeData MaxHealth;
 	ATTRIBUTE_ACCESSORS(UAttributeSetBase, MaxHealth)
 
-
 	/* ~SECONDARY ATTRIBUTES END */
 
+	/* RESISTANCE ATTRIBUTES  - Acts as secondary attributes*/
+
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AttributeSetBase | Resistance Attributes")
+		FGameplayAttributeData FireResistance;
+	ATTRIBUTE_ACCESSORS(UAttributeSetBase, FireResistance)
+
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AttributeSetBase | Resistance Attributes")
+		FGameplayAttributeData ShadowResistance;
+	ATTRIBUTE_ACCESSORS(UAttributeSetBase, ShadowResistance)
+
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AttributeSetBase | Resistance Attributes")
+		FGameplayAttributeData ArcaneResistance;
+	ATTRIBUTE_ACCESSORS(UAttributeSetBase, ArcaneResistance)
+
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AttributeSetBase | Resistance Attributes")
+		FGameplayAttributeData NatureResistance;
+	ATTRIBUTE_ACCESSORS(UAttributeSetBase, NatureResistance)
+
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AttributeSetBase | Resistance Attributes")
+		FGameplayAttributeData DivineResistance;
+	ATTRIBUTE_ACCESSORS(UAttributeSetBase, DivineResistance)
+
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AttributeSetBase | Resistance Attributes")
+		FGameplayAttributeData FrostResistance;
+	ATTRIBUTE_ACCESSORS(UAttributeSetBase, FrostResistance)
+
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AttributeSetBase | Resistance Attributes")
+		FGameplayAttributeData PhysicalResistance;
+	ATTRIBUTE_ACCESSORS(UAttributeSetBase, PhysicalResistance)
 
 
+	/*~ RESISTANCE ATTRIBUTES END - Acts as secondary attributes*/
 
 	/* 
 	
@@ -247,6 +276,6 @@ protected:
 
 	private:
 
-		void ShowFloatingText(const FEffectProperties& Props, float Damage);
+		void ShowFloatingText(const FEffectProperties& Props, float Damage, bool bBlockingHit, bool bCriticalHit);
 
 };

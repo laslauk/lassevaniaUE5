@@ -21,13 +21,6 @@ class LASSEVANIA_API UGameplayAbility_MeleeWeapon : public UGameplayAbility_From
 public:
 
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<UGameplayEffect> DamageEffectClass;
-
-
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
-	FScalableFloat Damage;
 
 	
 };

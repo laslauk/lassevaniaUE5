@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/Tasks/MeleeAttackTraceForTargetData.h"
 #include "LassevaniaCommonTypes.h"
+#include "AbilitySystem/LassevaniaAbilitySystemLibrary.h"
 #include "AbilitySystemComponent.h"
 
 
@@ -12,7 +13,12 @@ UMeleeAttackTraceForTargetData::UMeleeAttackTraceForTargetData(const FObjectInit
 	bTickingTask = true;
 }
 
-UMeleeAttackTraceForTargetData* UMeleeAttackTraceForTargetData::CreateMeleeAttackTraceForTargetData(UGameplayAbility* OwningAbility, FGameplayTag StartEventTag, FGameplayTag EndEventTag, bool bDrawDebug)
+UMeleeAttackTraceForTargetData* UMeleeAttackTraceForTargetData::CreateMeleeAttackTraceForTargetData(UGameplayAbility* OwningAbility,
+	FVector AttackDamageCollisionBoxExtend,
+	float InCollisionOffSet,
+	FGameplayTag StartEventTag, FGameplayTag EndEventTag, bool bDrawDebug
+
+)
 {
 	
 
@@ -20,6 +26,8 @@ UMeleeAttackTraceForTargetData* UMeleeAttackTraceForTargetData::CreateMeleeAttac
 	MyObj->StartTag = StartEventTag;
 	MyObj->EndTag = EndEventTag;
 	MyObj->bDrawDebug = bDrawDebug;
+	MyObj->AttackCollisionBox = AttackDamageCollisionBoxExtend;
+	MyObj->AttackCollisionOffset = InCollisionOffSet;
 	return MyObj;
 
 
@@ -45,28 +53,49 @@ void UMeleeAttackTraceForTargetData::TickTask(float DeltaTime)
 	if (bDoTrace)
 	{
 
+		TArray<AActor*> HitActors;
+
 		UAbilitySystemComponent* ASC = AbilitySystemComponent.Get();
 
 		if (ASC)
 		{
 			AActor* AvatarActor = GetAvatarActor();
 
-			//	MyHandle = ASC->GenericGameplayEventCallbacks.FindOrAdd(Tag).
-				//	AddUObject(this, &UAbilityTask_WaitGameplayEvent::GameplayEventCallback);
+			FVector Start = AvatarActor->GetActorLocation() +
+				(AvatarActor->GetActorForwardVector() * FVector(AttackCollisionOffset, 0.f, 0.f));
 
-	
+			ULassevaniaAbilitySystemLibrary::GetTargetsWithinBoxCollision(
+			this, HitActors, AvatarActor, AttackCollisionBox, Start, Lassevania_TraceChannel_HitBoxTrace);
 
+			if (bDrawDebug)
+			{
+				DrawDebugBox(GetWorld(), Start, AttackCollisionBox, FColor::Cyan, false, 1);
+			}
+
+			NewHitActors.Empty();
+
+
+			for (auto HitActor : HitActors)
+			{
+				if (!AllHitActors.Contains(HitActor))
+				{
+					NewHitActors.AddUnique(HitActor);
+				}
+				AllHitActors.AddUnique(HitActor);
+			}
+			AttackEnded.Broadcast(NewHitActors);
+			/*
 			FCollisionQueryParams TraceParams(
 				SCENE_QUERY_STAT(WeaponTrace),
-				/*bTraceComplex=*/ true,
-				/*IgnoreActor=*/ AvatarActor);
+				 true,
+			 AvatarActor);
 			TraceParams.bReturnPhysicalMaterial = true;
 
-			FVector BoxExtend({ 90.f,80.f,70.f });
+			FVector BoxExtend = AttackCollisionBox;
+			const float CollisionFrontOffset = AttackCollisionOffset;
 
 			TArray<FHitResult> HitResults;
-			FVector Start = AvatarActor->GetActorLocation() + 
-				(AvatarActor->GetActorForwardVector() * FVector(100.f,0.f,0.f));
+			
 			FVector End = Start;
 			ECollisionChannel TraceChannel = Lassevania_TraceChannel_HitBoxTrace;
 			FCollisionShape Box = FCollisionShape::MakeBox(BoxExtend);
@@ -83,11 +112,11 @@ void UMeleeAttackTraceForTargetData::TickTask(float DeltaTime)
 				TraceParams
 			);
 
-			if (bDrawDebug)
-			{
-				DrawDebugBox(GetWorld(), Start, BoxExtend, FColor::Cyan, false, 5);
-			}
-
+			*/
+		
+			
+			/*
+		
 		
 			NewHitActors.Empty();
 
@@ -99,13 +128,14 @@ void UMeleeAttackTraceForTargetData::TickTask(float DeltaTime)
 				}
 
 				AllHitActors.AddUnique(hit.GetActor());
-
 			}
 
 			AttackEnded.Broadcast(NewHitActors);
+			*/
 		}
 		
 	}
+	
 
 	bOldDoTrace = bDoTrace;
 	

@@ -33,6 +33,10 @@ public:
 	void SetPlayerState(APlayerStateBase* PlayerStateIn);
 
 
+	void SetDamageListenerTagCallback();
+
+	void OnDamaged(const FGameplayTag CallbackTag, int32 NewTagCount);
+
 	//virtual void ApplyStartupEffects() override;
 
 	UFUNCTION(BlueprintCallable)
@@ -41,6 +45,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void TryInteract();
 
+
+
+	UFUNCTION(BlueprintImplementableEvent, meta =
+		(DisplayName = "OnDamaged"))
+		void K2_OnDamaged();
 
 	UPROPERTY(EditAnywhere)
 		UEquipmentManagerComponent* EquipmentManagerComponent;

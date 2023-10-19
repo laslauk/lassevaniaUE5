@@ -34,8 +34,9 @@
 #include "CharacterZDBase.h"
 
 
-void APlayerControllerBase::ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter)
+void APlayerControllerBase::ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter, bool bBlockingHit, bool bCriticalHit)
 {
+
 	/* is valid checks PendingKill() aswell*/
 	if (IsValid(TargetCharacter) && DamageTextComponentClass)
 	{
@@ -46,7 +47,7 @@ void APlayerControllerBase::ShowDamageNumber(float DamageAmount, ACharacter* Tar
 
 		DamageText->AddRelativeLocation(FVector(0.f, 0.f, 170.f));
 		DamageText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-		DamageText->SetDamageText(DamageAmount);
+		DamageText->SetDamageText(DamageAmount, bBlockingHit, bCriticalHit);
 	}
 
 }
@@ -161,6 +162,7 @@ void APlayerControllerBase::OnPossess(APawn* aPawn)
 		PlayerCharacterBase->InitializeDefaultAttributes();
 		PlayerCharacterBase->ApplyStartupEffects();
 		PlayerCharacterBase->GiveAbilities();
+		PlayerCharacterBase->SetDamageListenerTagCallback();
 	}
 
 

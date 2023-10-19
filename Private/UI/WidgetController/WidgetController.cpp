@@ -2,6 +2,8 @@
 
 
 #include "UI/WidgetController/WidgetController.h"
+#include "AbilitySystemComponent.h"
+
 
 void UWidgetController::SetWidgetControllerParams(const FWidgetControllerParams& WCParams)
 {

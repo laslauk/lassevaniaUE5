@@ -4,6 +4,7 @@
 #include "UI/WidgetController/AttributeMenuWidgetController.h"
 #include "AttributeSetBase.h"
 #include "AbilitySystem/Data/AttributeInfo.h"
+#include "AbilitySystemComponent.h"
 #include "LassevaniaGameplayTags.h"
 
 void UAttributeMenuWidgetController::BindCallbacksToDependencies()

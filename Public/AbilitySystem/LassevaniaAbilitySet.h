@@ -87,9 +87,7 @@ struct FLassevaniaAbilitySet_GrantedHandles
 {
 	GENERATED_BODY()
 
-
 public:
-
 
 	void AddAbilitySpecHandle(const FGameplayAbilitySpecHandle& Handle);
 	void AddGameplayEffectHandle(const FActiveGameplayEffectHandle& Handle);

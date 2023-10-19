@@ -31,7 +31,8 @@ public:
 			DefaultToSelf = "OwningAbility",
 			BlueprintInternalUseOnly = "true")
 	)
-		static UMeleeAttackTraceForTargetData* CreateMeleeAttackTraceForTargetData(UGameplayAbility* OwningAbility, FGameplayTag StartTag, FGameplayTag EndTag, bool bDrawDebug);
+		static UMeleeAttackTraceForTargetData* CreateMeleeAttackTraceForTargetData(UGameplayAbility* OwningAbility, FVector AttackDamageCollisionBoxExtend,  
+			float InCollisionOffset, FGameplayTag StartTag, FGameplayTag EndTag, bool bDrawDebug);
 
 	void GameplayEventCallback(const FGameplayEventData* Payload);
 
@@ -44,6 +45,9 @@ public:
 
 	FGameplayTag StartTag;
 	FGameplayTag EndTag;
+
+	float AttackCollisionOffset;
+	FVector AttackCollisionBox;
 
 	UPROPERTY(BlueprintAssignable)
 	FHitResultTargetDataSignature AttackEnded;

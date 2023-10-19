@@ -33,7 +33,7 @@ public:
 
 	ACharacterZDBase();
 
-	void GiveAbilities();
+	virtual void GiveAbilities();
 
 	UPROPERTY(EditDefaultsOnly/*ReplicatedUsing = OnRep_PawnData*/)
 	TObjectPtr<const UCharacterDataAsset> CharacterDataAsset;
@@ -81,7 +81,6 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes") //metas not replicated
 		TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
-
 
 	/* These depend on Primary attributes - applied with infinite GE*/
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes") //metas not replicated

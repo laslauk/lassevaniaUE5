@@ -36,11 +36,46 @@ public:
 	FGameplayTag Attributes_Secondary_MaxStamina;
 	FGameplayTag Attributes_Secondary_MaxMana;
 	FGameplayTag Attributes_Secondary_BlockChance;
+	FGameplayTag Attributes_Resistance_Physical;
+
+	FGameplayTag Attributes_Resistance_Fire;
+	FGameplayTag Attributes_Resistance_Shadow;
+	FGameplayTag Attributes_Resistance_Frost;
+	FGameplayTag Attributes_Resistance_Nature;
+	FGameplayTag Attributes_Resistance_Divine;
+	FGameplayTag Attributes_Resistance_Arcane;
+
+	/* Attack tags*/
+
+	
+
+	FGameplayTag Abilities_Attack;
+	FGameplayTag Abilities_Deflect;
+
+	FGameplayTag Abilities_Event_Parried;
+	
+
+	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistancesMap;
 
 	FGameplayTag Effects_HitReact;
+	FGameplayTag Effects_HitStunned;
+
+	/*damage types*/
 
 
-	FGameplayTag Damage;
+	FGameplayTag Damage; 
+	FGameplayTag Damage_GameplayEvent_HitReact;
+
+
+	FGameplayTag Damage_Fire;
+	FGameplayTag Damage_Shadow;
+	FGameplayTag Damage_Frost;
+	FGameplayTag Damage_Nature;
+	FGameplayTag Damage_Divine;
+	FGameplayTag Damage_Arcane;
+
+	FGameplayTag Damage_Physical;
+
 
 protected:
 

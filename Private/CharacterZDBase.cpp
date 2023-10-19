@@ -10,12 +10,15 @@
 #include "DataAssets/CharacterDataAsset.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/LVAbilitySystemComponent.h"
+#include "AbilitySystem/GameplayAbilityBase.h"
+
 #include "AbilitySystem/LassevaniaAbilitySet.h"
 #include "Interfaces/InteractInterface.h"
 
 
 ACharacterZDBase::ACharacterZDBase() {
 
+	
 
 }
 

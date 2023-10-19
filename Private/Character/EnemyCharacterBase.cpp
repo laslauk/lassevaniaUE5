@@ -7,7 +7,16 @@
 #include "UI/UserWidgetBase.h"
 #include "AttributeSetBase.h"
 #include "AbilitySystem/LassevaniaAbilitySystemLibrary.h"
+#include "AbilitySystem/GameplayAbilityBase.h"
+#include "AI/LassevaniaAIController.h"
 #include "AbilitySystem/LVAbilitySystemComponent.h"
+#include "AbilitySystem/LassevaniaAbilitySet.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/Character.h"
+#include "PaperZD/Public/PaperZDAnimationComponent.h"
 #include "LassevaniaGameplayTags.h"
 
 
@@ -20,15 +29,31 @@ AEnemyCharacterBase::AEnemyCharacterBase()
 	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
 	HealthBar->SetupAttachment(GetRootComponent());
 
+	//GetAnimationComponent()->Rename(TEXT("ass"));
 
+	
 
+}
+
+void AEnemyCharacterBase::SetupAI(AController* NewController)
+{
+	if (!NewController) return;
+	if (BehaviorTree.IsNull()) return;
+
+	LassevaniaAIController = Cast<ALassevaniaAIController>(NewController);
+
+	if (!HasAuthority()) return; //AI only controlled on server, client see replicated
+
+	LassevaniaAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
+	LassevaniaAIController->RunBehaviorTree(BehaviorTree);
+	LassevaniaAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), false);
 }
 
 void AEnemyCharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	
+	SetupAI(NewController);
 
 	ApplyStartupEffects();
 		
@@ -47,7 +72,12 @@ UAttributeSetBase* AEnemyCharacterBase::GetAttributeSetComponent()
 void AEnemyCharacterBase::Die()
 {
 	Super::Die();
-	Destroy();
+
+
+
+	K2_OnDeath();
+	//Destroy(); handled in BP now atm
+	
 }
 
 void AEnemyCharacterBase::InitializeDefaultAttributes()
@@ -73,11 +103,19 @@ int32 AEnemyCharacterBase::GetAvatarLevel() {
 
 
 
+void AEnemyCharacterBase::SetupMovementFor2DCharacter()
+{
+
+	UCharacterMovementComponent* CharMoveComp = Cast<UCharacterMovementComponent>(GetMovementComponent());
+	bUseControllerRotationYaw = true;
+	CharMoveComp->bOrientRotationToMovement = false;
+}
+
 void AEnemyCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 	InitAbilityActorInfo();
-
+	SetupMovementFor2DCharacter();
 	if (UUserWidgetBase* UserWidgetBase = Cast<UUserWidgetBase>(HealthBar->GetUserWidgetObject()))
 	{
 		UserWidgetBase->SetWidgetController(this);
@@ -108,27 +146,10 @@ void AEnemyCharacterBase::BeginPlay()
 
 
 
-		for (const TSubclassOf<UGameplayAbility> AbilityClass : CommonAbilities)
-		{
-			FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
-		
-			if (const UGameplayAbilityBase* GameplayAbiltiyBase = Cast<UGameplayAbilityBase>(AbilitySpec.Ability))
-			{
-				FGameplayAbilitySpecHandle AbilitySpecHandle = GetAbilitySystemComponent()->GiveAbility(AbilitySpec);
-
-
-				if (AbilitySpecHandle.IsValid())
-				{
-
-					UE_LOG(LogTemp, Warning, TEXT("Granted ability "));
-
-				}
-			}
-		}
 
 
 	}
-
+	GiveAbilities();
 	/* Listen for tag add / removal */
 	BindToGameplayTags();
 	InitializeDefaultAttributes();
@@ -136,23 +157,55 @@ void AEnemyCharacterBase::BeginPlay()
 
 }
 
+
+void AEnemyCharacterBase::GiveAbilities()
+{
+		if (EnemyCharacterAbilitySet)
+		{
+			EnemyCharacterAbilitySet->GiveToAbilitySystem(Cast<ULVAbilitySystemComponent>(GetAbilitySystemComponent()), nullptr);
+		}
+
+	/*
+	for (const TSubclassOf<UGameplayAbility> AbilityClass : EnemyCharacterAbilitySet)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+
+		if (const UGameplayAbilityBase* GameplayAbiltiyBase = Cast<UGameplayAbilityBase>(AbilitySpec.Ability))
+		{
+			FGameplayAbilitySpecHandle AbilitySpecHandle = GetAbilitySystemComponent()->GiveAbility(AbilitySpec);
+
+
+			if (AbilitySpecHandle.IsValid())
+			{
+
+				UE_LOG(LogTemp, Warning, TEXT("Granted ability "));
+
+			}
+		}
+	}
+
+	*/
+}
+
 void AEnemyCharacterBase::BindToGameplayTags()
 {
 	if (AbilitySystemComponent)
 	{
 
-		AbilitySystemComponent->RegisterGameplayTagEvent(FLassevaniaGameplayTags::Get().Effects_HitReact,
-			EGameplayTagEventType::AnyCountChange).AddUObject(this, &AEnemyCharacterBase::HitReactTagChanged);
+		AbilitySystemComponent->RegisterGameplayTagEvent(FLassevaniaGameplayTags::Get().Effects_HitStunned,
+			EGameplayTagEventType::AnyCountChange).AddUObject(this, &AEnemyCharacterBase::HitStunTagChanged);
 
 	}
 
 }	
 
-void AEnemyCharacterBase::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewTagCount)
+void AEnemyCharacterBase::HitStunTagChanged(const FGameplayTag CallbackTag, int32 NewTagCount)
 {
-	UE_LOG(LogTemp, Warning, TEXT("ASDDASDASDADSASDADS"));
-	 bHitReacting = NewTagCount > 0;
+	/* Set AI blackboard values to follow if HitStunned or not. Tag added through GA_HitStunned Tag adding */
+	 bHitStunned = NewTagCount > 0;
+	 LassevaniaAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), bHitStunned);
 	
+
 	 /*
 	 if (IsValid(HitReactEffectClass))
 	 {
@@ -164,7 +217,7 @@ void AEnemyCharacterBase::HitReactTagChanged(const FGameplayTag CallbackTag, int
 	*/
 
 
-	K2_OnHitReact();
+	K2_OnHitStunned();
 
 }
 

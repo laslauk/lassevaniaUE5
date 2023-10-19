@@ -78,6 +78,12 @@ public:
 
 
 	UPROPERTY(EditDefaultsOnly, Category = "Effects")
+		bool bDamageCausesHitStun = true;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Effects")
+		bool bIsParryable = true;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Effects")
 		bool bActivateAbilityOnGranted = false;
 
 	EAbilityActivationPolicy GetActivationPolicy() const { return ActivationPolicy; }
@@ -100,6 +106,18 @@ public:
 	virtual void OnRemoveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
 
 
+	/* DAMAGE - now at base class - TODO: because damageable abiltiy and equipment abilities need to be sorted */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+		TSubclassOf<UGameplayEffect> DamageEffectClass;
+
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
+	TMap<FGameplayTag, FScalableFloat> DamageTypes;
+
+
+
+	UFUNCTION(BlueprintCallable)
+	void CauseDamage(AActor* TargetActor);
 
 protected:
 	// Defines how this ability is meant to activate.

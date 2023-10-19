@@ -2,6 +2,10 @@
 
 
 #include "AbilitySystem/GameplayAbilityBase.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "LassevaniaAbilityTypes.h"
+#include "AbilitySystem/LassevaniaAbilitySystemLibrary.h"
+
 #include "CharacterZDBase.h"
 
 UGameplayAbilityBase::UGameplayAbilityBase(const FObjectInitializer& ObjectInitializer):Super(ObjectInitializer)
@@ -45,4 +49,37 @@ void UGameplayAbilityBase::OnRemoveAbility(const FGameplayAbilityActorInfo* Acto
 {
 	K2_OnAbilityRemoved();
 	Super::OnRemoveAbility(ActorInfo, Spec);
+}
+
+
+void UGameplayAbilityBase::CauseDamage(AActor* TargetActor)
+{
+
+	if (!IsValid(DamageEffectClass))  return;
+
+	FGameplayEffectSpecHandle DamageSpecHandle = MakeOutgoingGameplayEffectSpec(DamageEffectClass, 1.0f);
+
+	for (TTuple<FGameplayTag, FScalableFloat> Pair : DamageTypes)
+	{
+		float ScaledDamage = Pair.Value.GetValueAtLevel(GetAbilityLevel());
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageSpecHandle, Pair.Key, ScaledDamage);
+
+		/* Set Properties of Gameplay Effect - Damage , handled in ExecCalc Damage cpp*/
+		FGameplayEffectContextHandle EffectContext = DamageSpecHandle.Data->GetContext();
+
+		ULassevaniaAbilitySystemLibrary::SetIsParryableAbility(
+			EffectContext, bIsParryable
+		);
+
+		ULassevaniaAbilitySystemLibrary::SetDamageCasuesHitStun(
+			EffectContext, bDamageCausesHitStun
+		);
+
+
+		/* Apply to target */
+		GetAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(*DamageSpecHandle.Data.Get(),
+			UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor)
+		);
+	}
+
 }
