@@ -238,7 +238,7 @@ void AEnemyCharacterBase::ApplyStartupEffects()
 	UE_LOG(LogTemp, Warning, TEXT("Calling CHARACYTER ZD BASE GetAbilitySysteMComp()"));
 	if (GetAbilitySystemComponent() == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("homo"));
+		
 
 		return;
 	}
