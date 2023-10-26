@@ -24,7 +24,7 @@ protected:
 	FBlackboardKeySelector TargetToFollowSelector;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-		FBlackboardKeySelector DistanceToTargetSelector;
+	FBlackboardKeySelector DistanceToTargetSelector;
 
 public:
 

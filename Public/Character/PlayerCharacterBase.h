@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CharacterZDBase.h"
+
 #include "PlayerCharacterBase.generated.h"
 
 class UEquipmentManagerComponent;
@@ -57,9 +58,13 @@ public:
 	UPROPERTY(EditAnywhere)
 		UInventoryManagerComponent* InventoryManagerComponent;
 
-	/* Combat interface */
-	virtual int32 GetAvatarLevel() override;
-		/* Combat interface */
+	/** Combat interface */
+	 int32 GetAvatarLevel() override;
+
+	/** End Combat interface */
+
+
+
 
 private:
 

@@ -45,6 +45,8 @@ public:
 	FGameplayTag Attributes_Resistance_Divine;
 	FGameplayTag Attributes_Resistance_Arcane;
 
+
+
 	/* Attack tags*/
 
 	
@@ -60,12 +62,15 @@ public:
 	FGameplayTag Effects_HitReact;
 	FGameplayTag Effects_HitStunned;
 
+
 	/*damage types*/
 
 
 	FGameplayTag Damage; 
 	FGameplayTag Damage_GameplayEvent_HitReact;
 
+	FGameplayTag Ability_Buff_Invurneabilitiy;
+	FGameplayTag Ability_Buff_HitStunImmunity;
 
 	FGameplayTag Damage_Fire;
 	FGameplayTag Damage_Shadow;
@@ -75,6 +80,9 @@ public:
 	FGameplayTag Damage_Arcane;
 
 	FGameplayTag Damage_Physical;
+
+	/* MEta */
+	FGameplayTag Attributes_Meta_IncomingXP;
 
 
 protected:

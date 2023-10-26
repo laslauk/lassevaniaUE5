@@ -12,10 +12,15 @@
 #include "PlayerStateBase.generated.h"
 
 class UAbilitySystemComponent;
-class  UAttributeSetBase;
+class UAttributeSetBase;
 class UInventoryComponent;
 class APlayerControllerBase;
+class ULevelUpInfo;
 
+
+
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerStatChanged, int32 /*StatValue*/);
 
 /**
  * 
@@ -58,10 +63,38 @@ public:
 
 
 	UFUNCTION(BlueprintCallable)
-	 void SetAvatarLevel(int32 NewLevel) { Level = NewLevel; }
+	 void SetPlayerLevel(int32 NewLevel) { Level = NewLevel; }
 
 	UFUNCTION(BlueprintCallable)
-	 int32 GetAvatarLevel() { return Level; }
+	 int32 GetPlayerLevel() { return Level; }
+
+	UFUNCTION(BlueprintCallable)
+	int32 GetXP() { return XP; }
+
+
+	UFUNCTION(BlueprintCallable)
+	int32 GetStoredXP() { return StoredXP; }
+
+	FOnPlayerStatChanged OnXPChangedDelegate;
+	FOnPlayerStatChanged OnLevelChangedDelegate;
+
+
+	UFUNCTION(BlueprintCallable)
+	void AddToXP(int32 InXP);
+
+	UFUNCTION(BlueprintCallable)
+	void AddToLevel(int32 InLevel);
+
+	UFUNCTION(BlueprintCallable)
+	void SetLevel(int32 NewLevel);
+
+	UFUNCTION(BlueprintCallable)
+	void SetXP(int32 NewXP);
+
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<ULevelUpInfo> LevelUpInfo;
+
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "CharacterBase")
@@ -77,5 +110,16 @@ protected:
 
 	//UAbilitySystemComponent* AbilitySystemComponent;
 
+
+private:
+
+	UPROPERTY(VisibleAnywhere)
+	int32 PlayerLevel;
+
+	UPROPERTY(VisibleAnywhere)
+	int32 XP;
+
+	UPROPERTY(VisibleAnywhere)
+	int32 StoredXP;
 
 };

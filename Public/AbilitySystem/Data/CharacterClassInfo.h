@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
+#include "ScalableFloat.h"
 #include "CharacterClassInfo.generated.h"
 
 class UGameplayEffect;
@@ -28,6 +29,9 @@ public:
 
 		UPROPERTY(EditDefaultsOnly,Category = "Class Defaults")
 		TSubclassOf<UGameplayEffect> PrimaryAttributes;
+
+		UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults | XP Reward Curve")
+		FScalableFloat XPReward = FScalableFloat();
 };
 
 /**
@@ -54,5 +58,11 @@ public:
 	FCharacterClassDefaultInfo GetClassDefaultInfo(ECharacterClass CharacterClass);
 
 	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults | Damage")
-		TObjectPtr<UCurveTable> DamageCalculationCoefficients;
+	TObjectPtr<UCurveTable> DamageCalculationCoefficients;
+
+
+
+//	TObjectPtr<UCurveTable> XPRewardCurve;
+
+
 };

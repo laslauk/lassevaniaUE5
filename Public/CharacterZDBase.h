@@ -8,6 +8,7 @@
 #include "Abilities/GameplayAbility.h"
 #include "AbilitySystemInterface.h"
 #include "LassevaniaCommonTypes.h"
+#include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "Interfaces/CombatInterface.h"
 #include "CharacterZDBase.generated.h"
 
@@ -52,7 +53,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual UAttributeSetBase* GetAttributeSetComponent();
 
-	void TryMovement(float ScaleValue);
+	virtual void TryMovement(float ScaleValue);
 
 	UFUNCTION(BlueprintCallable)
 	const UCharacterDataAsset*  GetCharacterData() const;
@@ -65,14 +66,13 @@ public:
 	bool ApplyGameplayEffectToSelf(TSubclassOf<UGameplayEffect> gameplayEffect, FGameplayEffectContextHandle IneffectContext);
 	
 	UFUNCTION(BlueprintCallable)
-		void SetCanMove(bool NewCanMove) { bCanMove = NewCanMove;  }
-
-	/* Combat interface */
+	void SetCanMove(bool NewCanMove) { bCanMove = NewCanMove;  }
 
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> Effect, float level);
 
 
-
+	/* Combat interface */
+	ECharacterClass GetCharacterClass_Implementation() override { return CharacterClass; }
 	virtual void Die() override;
 	/* Combat interface end*/
 
@@ -90,13 +90,13 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes") //metas not replicated
 		TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
 
-private:
 
-
+protected:
 
 	bool bCanMove = true;
 
-
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "character class defaults")
+	ECharacterClass CharacterClass = ECharacterClass::Warrior;
 
 
 };

@@ -22,7 +22,10 @@ using TStaticFuncPtr = typename TBaseStaticDelegateInstance<T, FDefaultDelegateU
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
 
-// DECLARE_DELEGATE_RetVal(FGameplayAttribute, FAttributeSignature);
+
+
+
+ DECLARE_DELEGATE_RetVal(FGameplayAttribute, FAttributeSignature);
 
 class UAbilitySystemComponent;
 
@@ -271,11 +274,17 @@ ATTRIBUTE_ACCESSORS(UAttributeSetBase, MovementSpeed)
 	FGameplayAttributeData IncomingDamage;
 	ATTRIBUTE_ACCESSORS(UAttributeSetBase, IncomingDamage)
 
+
+
+	UPROPERTY(BlueprintReadOnly, Category = "Meta Attributes") //metas not replicated
+	FGameplayAttributeData IncomingXP;
+	ATTRIBUTE_ACCESSORS(UAttributeSetBase, IncomingXP)
+
 protected:
 
 
 	private:
-
+		void SendXPEvent(const FEffectProperties& Properties);
 		void ShowFloatingText(const FEffectProperties& Props, float Damage, bool bBlockingHit, bool bCriticalHit);
 
 };

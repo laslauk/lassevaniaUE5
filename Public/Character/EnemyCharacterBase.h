@@ -6,7 +6,7 @@
 
 #include "CharacterZDBase.h"
 #include "../UI/WidgetController/OverlayWidgetController.h"
-#include "../AbilitySystem/Data/CharacterClassInfo.h"
+
 
 #include "EnemyCharacterBase.generated.h"
 
@@ -16,7 +16,6 @@
 class UWidgetComponent;
 class UAttributeSetBase;
 class UGameplayAbility;
-
 class UBehaviorTree;
 class ALassevaniaAIController;
 
@@ -46,6 +45,21 @@ public:
 	FORCEINLINE class ULVAbilitySystemComponent* GetLVAbilitySystemComponent() const { return AbilitySystemComponent; }
 
 
+	virtual void AddMovementInput
+	(
+		FVector WorldDirection,
+		float ScaleValue,
+		bool bForce
+	) override;
+
+
+	UFUNCTION(BlueprintCallable)
+	 void GotAttacked(const FGameplayTag CallbackTag, int32 NewTagCount) ;
+
+
+	UFUNCTION(BlueprintCallable)
+	virtual void TryMovement(float Scalevalue) override;
+
 	UPROPERTY(VisibleAnywhere, Category = "Lassevania|Ability System")
 	TObjectPtr<class ULVAbilitySystemComponent> AbilitySystemComponent;
 
@@ -55,10 +69,16 @@ public:
 
 	 UFUNCTION(BlueprintImplementableEvent, meta =
 		 (DisplayName = "OnDeath"))
-		 void K2_OnDeath();
+		void K2_OnDeath();
+
+
+
+	 UFUNCTION(BlueprintImplementableEvent, meta =
+		 (DisplayName = "OnAttacked"))
+		 void K2_OnAttacked();
+
 
 	 virtual void Die() override;
-
 
 
 	 virtual void InitializeDefaultAttributes() override;
@@ -69,7 +89,9 @@ public:
 
 	 void BindToGameplayTags();
 
+	 /*Combat interface */
 	 virtual int32 GetAvatarLevel() override;
+	 /*Combat interface */
 
 	 UPROPERTY(BlueprintAssignable)
 	 FOnAttributeChangedSignature OnHealthChanged;
@@ -98,13 +120,12 @@ public:
 	TObjectPtr<UBehaviorTree> BehaviorTree;
 
 
-
+	 UPROPERTY(VisibleAnywhere, Category = "CharacterBase")
+	 UAttributeSetBase* AttributeSetBaseComp;
 
 private:
 
 
-	UPROPERTY(VisibleAnywhere, Category = "CharacterBase")
-		UAttributeSetBase* AttributeSetBaseComp;
 
 	void SetupAI(AController* NewController);
 	void SetupMovementFor2DCharacter();
@@ -117,8 +138,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "character class defaults")
 		int32 Level = 1;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "character class defaults")
-	ECharacterClass CharacterClass = ECharacterClass::Warrior;
 
 
 

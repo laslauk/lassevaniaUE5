@@ -44,8 +44,13 @@ public:
 
 
 	UFUNCTION(BlueprintPure, Category = "LassevaniaAbilitySystemLibrary | GameplayEffects")
-		static FGameplayEffectSpecHandle CreateDamageEffectSpec(const FGameplayEffectContextHandle& EffectContextHandle, AActor* OwnerActor, 
-			TSubclassOf<UGameplayEffect> DamageEffectClass, TMap<FGameplayTag, FScalableFloat> DamageTypes);
+	static FGameplayEffectSpecHandle CreateDamageEffectSpec( AActor* OwnerActor, TSubclassOf<UGameplayEffect> DamageEffectClass, TMap<FGameplayTag, FScalableFloat> DamageTypes);
+
+
+
+
+	UFUNCTION(BlueprintCallable, Category = "LassevaniaAbilitySystemLibrary | GameplayEffects")
+	static void GrantGameplayEffectToTargetWithDuration(AActor* OwnerActor, TSubclassOf<UGameplayEffect> InvurneabilityGameplayEffect, FGameplayTag EffectTag, float Duration);
 
 
 	/* Gameplay effect context */
@@ -80,5 +85,9 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "LassevaniaAbilitySystemLibrary | Combat Gameplay Mechanics")
 	static bool IsTargetHostile(AActor* Actor, AActor* OtherActor);
+
+
+	UFUNCTION()
+	static int32 GetXPRewardForEnemy(const UObject* WorldContextObject,ECharacterClass CharacterClass, int32 CharacterLevel);
 
 };

@@ -45,6 +45,13 @@ public:
 
 
 
+	UPROPERTY(BlueprintAssignable, Category = "GAS|XP")
+	FOnAttributeChangedSignature OnXPPercentChangedDelegate;
+
+
+	void OnXPChanged(int32 NewXP) const;
+
+
 protected:
 	//obsolete
 //	void HealthChanged(const FOnAttributeChangeData& Data) const;
